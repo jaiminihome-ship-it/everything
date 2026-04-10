@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black & Gold Link Hub</title>
+    <style>
+        :root {
+            --gold: linear-gradient(135deg, #d4af37 0%, #f9e29c 50%, #b8860b 100%);
+            --gold-solid: #d4af37;
+            --black-bg: #0a0a0a;
+            --card-bg: #141414;
+            --text-gold: #f9e29c;
+        }
+
+        body {
+            font-family: 'Georgia', serif; /* Classy look */
+            background-color: var(--black-bg);
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
+            margin: 0;
+            padding: 40px 20px;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--gold-solid);
+            padding-bottom: 10px;
+        }
+
+        /* 2-Column Grid */
+        #linksContainer {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        @media (max-width: 768px) {
+            #linksContainer { grid-template-columns: 1fr; }
+        }
+
+        /* Rectangular Premium Card */
+        .card-wrapper {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            padding: 0; /* Managed by inner containers */
+            display: flex;
+            align-items: stretch;
+            text-decoration: none;
+            color: inherit;
+            height: 120px; /* Fixed rectangular height */
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Golden Left Border Accent */
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: var(--gold);
+        }
+
+        .card:hover {
+            border-color: var(--gold-solid);
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Image handling */
+        .img-container {
+            width: 120px;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid #222;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            filter: grayscale(0.5);
+            transition: 0.3s;
+        }
+
+        .card:hover img {
+            filter: grayscale(0);
+        }
+
+        .card-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-info h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.4rem;
+            color: var(--text-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #888;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Delete Button - Stylish Gold/Red */
+        .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 5;
+            display: none;
+        }
+
+        .card-wrapper:hover .delete-btn { display: block; }
+
+        /* Floating Add Button - Gold */
+        .add-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: var(--gold);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 0; /* Square for premium look */
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transition: 0.3s;
+        }
+
+        .add-btn:hover { transform: rotate(90deg) scale(1.1); }
+
+        /* Modal styling */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #141414;
+            border: 2px solid var(--gold-solid);
+            padding: 40px;
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        input {
+            background: #000;
+            border: 1px solid #333;
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        input:focus { outline: none; border-color: var(--gold-solid); }
+
+        .save-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Executive Hub</h1>
+
+    <div id="linksContainer">
+        </div>
+
+    <button class="add-btn" onclick="toggleModal(true)">+</button>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--text-gold); text-align: center;">New Asset</h2>
+            <input type="text" id="name" placeholder="TITLE">
+            <input type="text" id="url" placeholder="URL (https://...)">
+            <input type="file" id="iconFile" accept="image/*">
+            <button class="save-btn" onclick="addLink()">Confirm Entry</button>
+            <button onclick="toggleModal(false)" style="background:none; color: #555; border:none; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/25/25231.png';
+        let links = JSON.parse(localStorage.getItem('GoldLinks')) || [];
+
+        function toggleModal(show) {
+            document.getElementById('modal').style.display = show ? 'flex' : 'none';
+        }
+
+        function renderLinks() {
+            const container = document.getElementById('linksContainer');
+            container.innerHTML = '';
+            links.forEach((link, index) => {
+                const imgUrl = link.icon || DEFAULT_ICON;
+                container.innerHTML += `
+                    <div class="card-wrapper">
+                        <button class="delete-btn" onclick="deleteLink(${index})">×</button>
+                        <a href="${link.url}" target="_blank" class="card">
+                            <div class="img-container">
+                                <img src="${imgUrl}" alt="icon">
+                            </div>
+                            <div class="card-info">
+                                <h3>${link.name}</h3>
+                                <p>${link.url.substring(0, 40)}...</p>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            });
+        }
+
+        function addLink() {
+            const name = document.getElementById('name').value;
+            const url = document.getElementById('url').value;
+            const iconFile = document.getElementById('iconFile').files[0];
+
+            if(name && url) {
+                if (iconFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        links.push({ name, url, icon: e.target.result });
+                        saveAndRender();
+                    }
+                    reader.readAsDataURL(iconFile);
+                } else {
+                    links.push({ name, url, icon: null });
+                    saveAndRender();
+                }
+                document.getElementById('name').value = '';
+                document.getElementById('url').value = '';
+                toggleModal(false);
+            }
+        }
+
+        function deleteLink(index) {
+            links.splice(index, 1);
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('GoldLinks', JSON.stringify(links));
+            renderLinks();
+        }
+
+        renderLinks();
+    </script>
+</body>
+</html>
